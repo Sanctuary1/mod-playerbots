@@ -2824,35 +2824,17 @@ bool PlayerbotAI::SayToChannel(const std::string& msg, const ChatChannelId& chan
 
     for (auto const& [key, channel] : cMgr->GetChannels())
     {
-        // Checks if the channel pointer is valid
         if (!channel)
             continue;
 
-        // Checks if the channel matches the specified ChatChannelId
-        if (channel->GetChannelId() == chanId)
-        {
-            // If the channel name is empty, skip it to avoid access problems
-            if (channel->GetName().empty())
-                continue;
+        if (channel->GetChannelId() != chanId)
+            continue;
 
-            // Checks if the channel name contains the current zone
-            const auto does_contains = channel->GetName().find(current_str_zone) != std::string::npos;
-            if (chanId != ChatChannelId::LOOKING_FOR_GROUP && chanId != ChatChannelId::WORLD_DEFENSE && !does_contains)
-            {
-                continue;
-            }
-            else if (chanId == ChatChannelId::LOOKING_FOR_GROUP || chanId == ChatChannelId::WORLD_DEFENSE)
-            {
-                // Here you can add the capital check if necessary
-            }
+        if (channel->GetName().empty())
+            continue;
 
-            // Final check to ensure the channel is correct before trying to say something
-            if (channel)
-            {
-                channel->Say(bot->GetGUID(), msg.c_str(), LANG_UNIVERSAL);
-                return true;
-            }
-        }
+        channel->Say(bot->GetGUID(), msg.c_str(), LANG_UNIVERSAL);
+        return true;
     }
 
     return false;
