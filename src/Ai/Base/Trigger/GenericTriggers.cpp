@@ -1,17 +1,18 @@
 /*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license, you may redistribute it
- * and/or modify it under version 3 of the License, or (at your option), any later version.
+ * This file is part of the mod-playerbots module for AzerothCore. See AUTHORS file for Copyright
+ * information; released under GNU GPL v2 license, redistribute/modify under version 2 of the License,
+ * or (at your option) any later version.
  */
 
 #include "GenericTriggers.h"
-
-#include <string>
-
-#include "GenericBuffUtils.h"
+#include "Corpse.h"
 #include "CreatureAI.h"
+#include "GenericBuffUtils.h"
 #include "ItemVisitors.h"
 #include "LastSpellCastValue.h"
 #include "ObjectGuid.h"
+#include "Player.h"
+#include "PlayerbotAI.h"
 #include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
 #include "PositionValue.h"
@@ -19,9 +20,7 @@
 #include "TemporarySummon.h"
 #include "ThreatManager.h"
 #include "Timer.h"
-#include "PlayerbotAI.h"
-#include "Player.h"
-#include "Corpse.h"
+#include <string>
 
 bool LowManaTrigger::IsActive()
 {
@@ -164,7 +163,7 @@ bool BuffTrigger::IsActive()
         return false;
 
     Aura* aura = botAI->GetAura(spell, target, checkIsOwner, checkDuration);
-    if (!aura || (beforeDuration && aura->GetDuration() < beforeDuration))
+    if (!aura || (beforeDuration && uint32(aura->GetDuration()) < beforeDuration))
         return true;
 
     return false;
@@ -418,7 +417,7 @@ bool HealerShouldAttackTrigger::IsActive()
     return true;
 }
 
-bool ItemCountTrigger::IsActive() { return AI_VALUE2(uint32, "item count", item) < count; }
+bool ItemCountTrigger::IsActive() { return AI_VALUE2(uint32, "item count", item) < uint32(count); }
 
 bool InterruptSpellTrigger::IsActive()
 {

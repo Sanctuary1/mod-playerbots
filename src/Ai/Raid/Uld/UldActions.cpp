@@ -1,13 +1,14 @@
+/*
+ * This file is part of the mod-playerbots module for AzerothCore. See AUTHORS file for Copyright
+ * information; released under GNU GPL v2 license, redistribute/modify under version 2 of the License,
+ * or (at your option) any later version.
+ */
 
 #include "UldActions.h"
-
-#include <CombatStrategy.h>
-#include <FollowMasterStrategy.h>
-
-#include <cmath>
-
 #include "AiObjectContext.h"
+#include "CombatStrategy.h"
 #include "DBCEnums.h"
+#include "FollowMasterStrategy.h"
 #include "GameObject.h"
 #include "Group.h"
 #include "LastMovementValue.h"
@@ -16,15 +17,16 @@
 #include "PlayerbotAIConfig.h"
 #include "Playerbots.h"
 #include "Position.h"
-#include "UldBossHelper.h"
-#include "UldScripts.h"
+#include "RtiTargetValue.h"
 #include "RtiValue.h"
 #include "ScriptedCreature.h"
 #include "ServerFacade.h"
+#include "TankAssistStrategy.h"
+#include "UldBossHelper.h"
+#include "UldScripts.h"
 #include "Unit.h"
 #include "Vehicle.h"
-#include <RtiTargetValue.h>
-#include <TankAssistStrategy.h>
+#include <cmath>
 
 const std::string ADD_STRATEGY_CHAR = "+";
 const std::string REMOVE_STRATEGY_CHAR = "-";
@@ -104,7 +106,7 @@ bool FlameLeviathanVehicleAction::MoveAvoidChasing(Unit* target)
         return false;
     if (avoidChaseIdx == -1)
     {
-        for (int i = 0; i < corners.size(); i++)
+        for (uint32 i = 0; i < corners.size(); i++)
         {
             if (bot->GetExactDist(corners[i]) > target->GetExactDist(corners[i]))
                 continue;
@@ -2633,7 +2635,7 @@ bool YoggSaronMarkTargetAction::Execute(Event /*event*/)
             if ((unit->GetEntry() == NPC_IMMORTAL_GUARDIAN || unit->GetEntry() == NPC_MARKED_IMMORTAL_GUARDIAN) &&
                 unit->GetHealthPct() > 10)
             {
-                if (unit->GetHealth() < lowestHealth)
+                if (unit->GetHealth() < uint32(lowestHealth))
                 {
                     lowestHealth = unit->GetHealth();
                     lowestHealthUnit = unit;

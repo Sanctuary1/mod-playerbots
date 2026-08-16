@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license, you may redistribute it
- * and/or modify it under version 3 of the License, or (at your option), any later version.
+ * This file is part of the mod-playerbots module for AzerothCore. See AUTHORS file for Copyright
+ * information; released under GNU GPL v2 license, redistribute/modify under version 2 of the License,
+ * or (at your option) any later version.
  */
 
 #ifndef PLAYERBOTS_TRIGGERCONTEXT_H
@@ -10,13 +11,15 @@
 #include "FishingTriggers.h"
 #include "GenericTriggers.h"
 #include "GuildTriggers.h"
+#include "HealthTriggers.h"
 #include "LfgTriggers.h"
 #include "LootTriggers.h"
 #include "NamedObjectContext.h"
 #include "NewRpgStrategy.h"
 #include "NewRpgTriggers.h"
-#include "PvpTriggers.h"
 #include "PullTriggers.h"
+#include "PvpTriggers.h"
+#include "RangeTriggers.h"
 #include "RpgTriggers.h"
 #include "RtiTriggers.h"
 #include "StuckTriggers.h"

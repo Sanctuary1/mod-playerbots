@@ -4,13 +4,12 @@
  */
 
 #include "TaxiAction.h"
-
+#include "Config.h"
 #include "Event.h"
 #include "LastMovementValue.h"
+#include "PlayerbotAIConfig.h"
 #include "PlayerbotTextMgr.h"
 #include "Playerbots.h"
-#include "PlayerbotAIConfig.h"
-#include "Config.h"
 
 bool TaxiAction::Execute(Event event)
 {
@@ -43,6 +42,7 @@ bool TaxiAction::Execute(Event event)
         if (bot->GetDistance(npc) > sPlayerbotAIConfig.farDistance)
             continue;
 
+        bot->GetSession()->SendLearnNewTaxiNode(npc);
         uint32 curloc = sObjectMgr->GetNearestTaxiNode(npc->GetPositionX(), npc->GetPositionY(), npc->GetPositionZ(),
                                                        npc->GetMapId(), bot->GetTeamId());
 
@@ -59,7 +59,7 @@ bool TaxiAction::Execute(Event event)
         }
 
         // Only for follower bots
-        if (botAI->HasRealPlayerMaster())
+        if (botAI->HasGameClientMaster())
         {
             uint32 index = botAI->GetGroupSlotIndex(bot);
             uint32 delay = sPlayerbotAIConfig.botTaxiDelayMin +
