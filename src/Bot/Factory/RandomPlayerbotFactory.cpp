@@ -136,13 +136,33 @@ Player* RandomPlayerbotFactory::CreateRandomBot(WorldSession* session, uint8 cls
         }
     }
 
-    //uint8 skinColor = skinColors[urand(0, skinColors.size() - 1)]; //not used, line marked for removal.
-    std::pair<uint8, uint8> face = faces[urand(0, faces.size() - 1)];
-    std::pair<uint8, uint8> hair = hairs[urand(0, hairs.size() - 1)];
+    // Some custom races do not provide every CharSections category. Never index
+    // an empty vector: use the zero-value appearance as a safe default and let
+    // Player::Create validate the completed character normally.
+    if (faces.empty() || hairs.empty())
+    {
+        LOG_WARN("playerbots",
+            "Incomplete CharSections data for race: {} and gender: {} (faces: {}, hairs: {}). "
+            "Using zero-value defaults for missing appearance data.",
+            race, gender, faces.size(), hairs.size());
+    }
+
+    std::pair<uint8, uint8> face = faces.empty()
+        ? std::pair<uint8, uint8>{0, 0}
+        : faces[urand(0, faces.size() - 1)];
+    std::pair<uint8, uint8> hair = hairs.empty()
+        ? std::pair<uint8, uint8>{0, 0}
+        : hairs[urand(0, hairs.size() - 1)];
 
     bool excludeCheck = (race == RACE_TAUREN) || (race == RACE_DRAENEI) ||
                         (gender == GENDER_FEMALE && race != RACE_NIGHTELF && race != RACE_UNDEAD_PLAYER);
-    uint8 facialHair = excludeCheck ? 0 : facialHairTypes[urand(0, facialHairTypes.size() - 1)];
+    uint8 facialHair = 0;
+    if (!excludeCheck && !facialHairTypes.empty())
+        facialHair = facialHairTypes[urand(0, facialHairTypes.size() - 1)];
+    else if (!excludeCheck)
+        LOG_WARN("playerbots",
+            "No facial-hair CharSections data for race: {} and gender: {}. Using value 0.",
+            race, gender);
 
     std::unique_ptr<CharacterCreateInfo> characterInfo = std::make_unique<CharacterCreateInfo>(
         name, race, cls, gender, face.second, face.first, hair.first, hair.second, facialHair);
